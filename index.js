@@ -31,33 +31,41 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-    // Skip authentication for login routes
-    if (req.path === '/' || req.path === '/login' || req.path === '/logout') {
-        //continue with the request path
-        return next();
-    }
-   
-});
-
-
-
-app.get('/', (req, res) => {
-    res.render("index");
-});
-
-
 const knex = require("knex")({
     client: "pg",
     connection: {
         host: process.env.RDS_HOSTNAME || "localhost",
         user: process.env.RDS_USERNAME || "postgres",
         password: process.env.RDS_PASSWORD || "admin",
-        database: process.env.RDS_DB_NAME || "media",
+        database: process.env.RDS_DB_NAME || "intex",
         port: process.env.RDS_PORT || 5432,
         ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false 
     }
 });
+
+app.use((req, res, next) => next());
+
+
+
+
+app.get('/', (req, res) => {
+    knex.select().from("users")
+      .then(users => {
+        console.log(`Successfully retrieved ${users.length} users from database`);
+        res.render("index", {users: users});
+      })
+      .catch((err) => {
+        console.error("Database query error:", err.message);
+        res.render("index", {
+          users: [],
+          error_message: `Database error: ${err.message}. Please check if the 'users' table exists.`
+        });
+      });
+    
+});
+
+
+
 
 
 

@@ -6,6 +6,40 @@
     <title>Intex</title>
 </head>
 <body>
-    The index.ejs page
+    <h1>The index.ejs page</h1>
+    <% if (typeof error_message !== 'undefined' && error_message) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error_message %>
+        </div>
+    <% } %>
+            
+    <% if (users.length === 0) { %>
+        <div class="alert alert-warning" role="alert">
+            No users found in the database.
+        </div>
+    <% } else { %>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let iCount = 0; iCount < users.length; iCount++) { %>
+                    <tr>
+                        <td><%= users[iCount].userid %></td>
+                        <td><%= users[iCount].username %></td>
+                        <td><%= users[iCount].userpassword %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
+    
+
+
+
 </body>
 </html>
