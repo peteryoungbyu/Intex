@@ -46,8 +46,6 @@ const knex = require("knex")({
 app.use((req, res, next) => next());
 
 
-
-
 app.get('/', (req, res) => {
     knex.select().from("users")
       .then(users => {
